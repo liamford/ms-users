@@ -1,0 +1,4 @@
+library: "spring-mvc"
+dateLibrary: "java8"
+hideGenerationTimestamp: true
+modelPackage: "com.training.users.swagger.model"

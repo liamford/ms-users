@@ -2,6 +2,8 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.1'
     id 'io.spring.dependency-management' version '1.1.4'
+    id 'org.hidetake.swagger.generator' version '2.19.2'
+    id 'idea'
 }
 
 group = 'com.training'
@@ -23,11 +25,40 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'io.swagger:swagger-annotations:1.6.12'
+    implementation "io.swagger.core.v3:swagger-annotations:2.1.10"
+    implementation 'javax.validation:validation-api:2.0.1.Final'
+    implementation 'javax.annotation:javax.annotation-api:1.3.2'
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    swaggerCodegen 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.47'  // or Swagger Codegen V3
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+swaggerSources {
+    user {
+        inputFile = file('src/main/java/com/training/users/api/users.yaml')
+        code {
+            language = 'spring'
+            outputDir = file('build/swagger')
+            components = ['models']
+            configFile = file('src/main/resources/api/config.yaml')
+        }
+    }
+}
+
+compileJava.dependsOn swaggerSources.user.code
+sourceSets.main.java.srcDir "${swaggerSources.user.code.outputDir}/src/main/java"
+
+idea {
+    module {
+        inheritOutputDirs = false
+        outputDir = swaggerSources.user.code.outputDir
+    }
 }
 
 tasks.named('test') {
