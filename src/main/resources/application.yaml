@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: ms-users
+server:
+  port: 8080
+logging:
+  level:
+    root: info

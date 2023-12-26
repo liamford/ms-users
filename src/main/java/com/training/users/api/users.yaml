@@ -1,0 +1,76 @@
+openapi: 3.0.0
+info:
+  version: "1"
+  title: User API
+  description: ''
+paths:
+  /users:
+    get:
+      description: Returns a list of users
+      responses:
+        '200':
+          description: Successfully returned a list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Users'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Users'
+            application/yaml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Users'
+    post:
+      description: Create a new User
+      responses:
+        '200':
+          description: Successfully added a new user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Users'
+    delete:
+      description: Delete a user
+      responses:
+        '200':
+          description: User deleted
+        '404':
+          description: User not found
+
+components:
+  schemas:
+    Users:
+      type: object
+      required:
+        - userID
+      properties:
+        userID:
+          type: string
+          pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+          example: 8a7b9cde-1b3c-4d5e-9f8a-7b6c5d4e3f42
+        userName:
+          type: string
+          minimum: 5
+          pattern: "^[a-zA-Z0-9_-]{3,16}$"
+          example: Rachel
+        email:
+          type: string
+          pattern: "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$"
+          example: liam.ford@gmail.com
+        password:
+          type: string
+          minimum: 6
+          pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$"
+          example: testing
+
+servers:
+  - description: SwaggerHub API Auto Mocking
+    url: 'https://virtserver.swaggerhub.com/rachelmcclelland6/UserAPI/1'
