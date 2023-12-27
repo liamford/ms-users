@@ -46,7 +46,7 @@ swaggerSources {
             language = 'spring'
             outputDir = file('build/swagger')
             components = ['models']
-            configFile = file('src/main/resources/api/config.yaml')
+            configFile = file('src/main/resources/api/config.json')
         }
     }
 }
