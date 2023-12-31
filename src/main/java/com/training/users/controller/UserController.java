@@ -1,5 +1,6 @@
 package com.training.users.controller;
 
+import com.training.users.config.PasswordConverterConfig;
 import com.training.users.config.VaultConfig;
 import com.training.users.model.UserRedisHash;
 import com.training.users.repository.UserRepository;
@@ -21,6 +22,7 @@ public class UserController {
 
     private final UserRepository userRepository;
     private final VaultConfig vaultConfig;
+    private final PasswordConverterConfig passwordConverterConfig;
 
     @GetMapping()
     public List<Users> getUsers(@RequestParam(required = false) String userName) {
@@ -40,7 +42,7 @@ public class UserController {
                         .userId(userRequest.getUserID())
                         .userName(userRequest.getUserName())
                         .email(userRequest.getEmail())
-                        .password(userRequest.getPassword())
+                        .password(passwordConverterConfig.convertToDatabaseColumn(userRequest.getPassword()))
                         .status("Active")
                         .build()
         );
