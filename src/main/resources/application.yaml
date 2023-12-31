@@ -1,12 +1,28 @@
 spring:
   application:
     name: ms-users
+  cloud:
+    vault:
+      host: localhost
+      port: 8200
+      token: root
+      scheme: http
+      kv:
+        enabled: true
+  config:
+    import: vault://
   data:
     redis:
       port: 6379
       host: localhost
+
 server:
   port: 8080
 logging:
   level:
     root: info
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh

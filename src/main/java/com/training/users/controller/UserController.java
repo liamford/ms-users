@@ -1,5 +1,6 @@
 package com.training.users.controller;
 
+import com.training.users.config.VaultConfig;
 import com.training.users.model.UserRedisHash;
 import com.training.users.repository.UserRepository;
 import com.training.users.swagger.model.UserRequest;
@@ -19,10 +20,15 @@ import java.util.stream.StreamSupport;
 public class UserController {
 
     private final UserRepository userRepository;
+    private final VaultConfig vaultConfig;
 
     @GetMapping()
-    public List<Users> getUsers() {
+    public List<Users> getUsers(@RequestParam(required = false) String userName) {
         log.info("User get API called for Getting users");
+        log.info("API KEY = {}", vaultConfig.getApiKey());
+        if(userName != null){
+            return getUsers(userRepository.findAllByUserName(userName));
+        }
         return getUsers(userRepository.findAll());
     }
 
