@@ -9,10 +9,31 @@ on:
 jobs:
 
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build -t liamford/users:latest .
+      - uses: actions/checkout@v2
+      - name: Set up JDK 1.17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Build with Gradle
+        run: ./gradlew clean build
+      - name: Get the version
+        id: vars
+        run: echo ::set-output name=tag::$(echo ${GITHUB_SHA:10})
+      - name: Docker login
+        env:
+          DOCKER_USERNAME: ${{ secrets.dockerhub_username }}
+          DOCKER_PASSWORD: ${{ secrets.dockerhub_password }}
+        run: docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" docker.io
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag ${{secrets.docker_username}}/${{secrets.repo_name}}:${{steps.vars.outputs.tag}}
+      - name: Publish dockerimage to docker hub
+        run: docker push ${{secrets.docker_username}}/${{secrets.repo_name}}:${{steps.vars.outputs.tag}}
+      - name: Build Docker image with latest tag
+        run: docker build . --file Dockerfile --tag ${{secrets.docker_username}}/${{secrets.repo_name}}:latest
+      - name: Publish dockerimage to docker hub
+        run: docker push ${{secrets.docker_username}}/${{secrets.repo_name}}:latest
+
