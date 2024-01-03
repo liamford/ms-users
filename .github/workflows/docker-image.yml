@@ -28,13 +28,14 @@ jobs:
         env:
           DOCKER_USERNAME: ${{ secrets.dockerhub_username }}
           DOCKER_PASSWORD: ${{ secrets.dockerhub_password }}
+          DOCKER_REPO: ${{secrets.repo_name}}
         run: docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" docker.io
       - name: Build the Docker image
-        run: docker build -t ${{secrets.docker_username}}/${{secrets.repo_name}}:${GITHUB_SHA:10} .
+        run: docker build -t $DOCKER_USERNAME/$DOCKER_PASSWORD:${GITHUB_SHA:10} .
       - name: Publish dockerimage to docker hub
-        run: docker push ${{secrets.docker_username}}/${{secrets.repo_name}}:${GITHUB_SHA:10}
+        run: docker push $DOCKER_USERNAME/$DOCKER_PASSWORD:${GITHUB_SHA:10}
       - name: Build Docker image with latest tag
-        run: docker build -t ${{secrets.docker_username}}/${{secrets.repo_name}}:latest .
+        run: docker build -t $DOCKER_USERNAME/$DOCKER_PASSWORD:latest .
       - name: Publish dockerimage to docker hub
-        run: docker push ${{secrets.docker_username}}/${{secrets.repo_name}}:latest
+        run: docker push $DOCKER_USERNAME/$DOCKER_PASSWORD:latest
 
