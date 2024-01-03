@@ -3,18 +3,19 @@ spring:
     name: ms-users
   cloud:
     vault:
-      host: localhost
-      port: 8200
-      token: root
-      scheme: http
+      host: ${VAULT_ADDR:localhost}
+      port: ${VAULT_PORT:8200}
+      token: ${VAULT_TOKEN:root}
+      scheme: ${VAULT_SCHEME:http}
       kv:
         enabled: true
   config:
     import: vault://
   data:
     redis:
-      port: 6379
-      host: localhost
+      port: ${REDIS_PORT:6379}
+      host: ${REDIS_HOST:localhost}
+      password: ${REDIS_PASSWORD:""}
 
 server:
   port: 8080

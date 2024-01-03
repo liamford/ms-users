@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ms-users-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ms-users
+  template:
+    metadata:
+      labels:
+        app: ms-users
+    spec:
+      containers:
+        - name: ms-users
+          image: liamford/users:latest
+          env:
+            - name: VAULT_ADDR
+              value: "vault.default.svc.cluster.local"
+            - name: VAULT_TOKEN
+              value: "root"
+            - name: VAULT_PORT
+              value: "8200"
+            - name: VAULT_SCHEME
+              value: "http"
+            - name: REDIS_HOST
+              value: "my-redis-master.default.svc.cluster.local"
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_PASSWORD
+              value: "root"
+
+
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
