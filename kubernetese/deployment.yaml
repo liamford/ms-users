@@ -29,7 +29,10 @@ spec:
             - name: REDIS_PORT
               value: "6379"
             - name: REDIS_PASSWORD
-              value: "root"
+              valueFrom:
+                secretKeyRef:
+                  name: my-redis
+                  key: redis-password
 
 
           imagePullPolicy: Always
